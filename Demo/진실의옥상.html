@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>진실의 옥상 · Truth Rooftop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   진실의 옥상 (Truth Rooftop) — 장소 기반 감성 메신저
+   단일 파일 프로토타입 · CSS/SVG 비주얼
+   ============================================================ */
+:root{
+  /* 메인 */
+  --navy-0:#0b1026;     /* 가장 깊은 밤 */
+  --navy-1:#141a3a;
+  --navy-2:#1d2350;
+  --navy-3:#272e63;
+  --purple-1:#3a2d6b;
+  --purple-2:#5b4a9e;
+  --purple-glow:#7c6bd6;
+  /* 포인트 */
+  --sunset:#ff9a52;     /* 노을 주황 */
+  --sunset-deep:#ff6b4a;
+  --lamp:#ffd47e;       /* 노란 조명 */
+  --star:#fff4cf;
+  /* 텍스트 */
+  --ink:#f4f2ff;
+  --ink-dim:#b9b6d8;
+  --ink-faint:#7d7aa6;
+  /* 표면 */
+  --card:rgba(38,44,92,.55);
+  --card-solid:#222850;
+  --bubble-me:linear-gradient(135deg,#ff9a52,#ff6b6b);
+  --bubble-you:rgba(255,255,255,.10);
+  --line:rgba(255,255,255,.09);
+  --ok:#7ee0a8;
+  --shadow:0 18px 50px rgba(0,0,0,.55);
+  --r:22px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;margin:0;}
+body{
+  font-family:'Gowun Dodum',system-ui,sans-serif;
+  background:
+    radial-gradient(1200px 700px at 20% -10%, #2a2257 0%, transparent 55%),
+    radial-gradient(1000px 800px at 110% 10%, #3a2256 0%, transparent 50%),
+    linear-gradient(180deg,#0a0e22 0%, #11102b 60%, #1a1330 100%);
+  color:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+  min-height:100dvh;padding:24px;overflow:hidden;
+}
+/* 배경 별 */
+.bg-stars{position:fixed;inset:0;pointer-events:none;z-index:0;}
+.bg-stars i{position:absolute;width:2px;height:2px;border-radius:50%;background:var(--star);opacity:.5;animation:tw 4s infinite}
+@keyframes tw{0%,100%{opacity:.15}50%{opacity:.9}}
+
+/* ===== 폰 프레임 ===== */
+.phone{
+  position:relative;z-index:1;
+  width:390px;height:min(844px,94dvh);
+  background:linear-gradient(180deg,var(--navy-1),var(--navy-0));
+  border-radius:46px;
+  box-shadow:var(--shadow), inset 0 0 0 2px rgba(255,255,255,.06);
+  overflow:hidden;display:flex;flex-direction:column;
+}
+.notch{position:absolute;top:10px;left:50%;transform:translateX(-50%);
+  width:120px;height:26px;background:#05060f;border-radius:16px;z-index:60;}
+.statusbar{height:44px;flex:0 0 44px;display:flex;align-items:flex-end;justify-content:space-between;
+  padding:0 24px 6px;font-size:13px;color:var(--ink);font-weight:bold;z-index:55;position:relative;}
+.statusbar .right{display:flex;gap:6px;align-items:center;font-size:11px}
+
+/* 스크린 컨테이너 */
+.screen-wrap{flex:1;position:relative;overflow:hidden;}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;overflow:hidden;
+  opacity:0;transform:translateX(30px);pointer-events:none;transition:opacity .32s, transform .32s;}
+.screen.active{opacity:1;transform:none;pointer-events:auto;}
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
+.scroll::-webkit-scrollbar{width:0}
+
+/* ===== 공통 헤더 ===== */
+.appbar{display:flex;align-items:center;gap:12px;padding:8px 18px 12px;flex:0 0 auto;position:relative;z-index:5;}
+.appbar .back{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;
+  background:rgba(255,255,255,.07);cursor:pointer;font-size:18px;flex:0 0 auto;border:none;color:var(--ink)}
+.appbar h1{font-family:'Jua';font-size:22px;margin:0;letter-spacing:.5px;flex:1}
+.appbar .sub{font-size:11px;color:var(--ink-dim);font-weight:normal}
+.appbar .ico-btn{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;background:rgba(255,255,255,.07);border:none;color:var(--ink);cursor:pointer;font-size:16px}
+
+/* 로고 헤더 */
+.logo-head{padding:14px 20px 6px;}
+.logo-head .title{font-family:'Jua';font-size:30px;line-height:1;background:linear-gradient(90deg,var(--lamp),var(--sunset));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.logo-head .moon{font-size:24px}
+.logo-head .tagline{font-size:12px;color:var(--ink-dim);margin-top:6px}
+
+/* 칩 */
+.chips{display:flex;gap:8px;padding:10px 20px 4px;overflow-x:auto}
+.chips::-webkit-scrollbar{height:0}
+.chip{flex:0 0 auto;padding:7px 14px;border-radius:20px;font-size:12px;background:rgba(255,255,255,.06);
+  border:1px solid var(--line);color:var(--ink-dim);cursor:pointer;white-space:nowrap;transition:.2s}
+.chip.on{background:linear-gradient(120deg,var(--sunset),var(--sunset-deep));color:#fff;border-color:transparent;font-weight:bold}
+
+/* ===== 채팅 리스트 ===== */
+.clist{padding:6px 12px 90px}
+.crow{display:flex;gap:12px;align-items:center;padding:12px 10px;border-radius:18px;cursor:pointer;transition:.2s}
+.crow:active{background:rgba(255,255,255,.05)}
+.avatar{width:50px;height:50px;border-radius:16px;flex:0 0 auto;display:grid;place-items:center;font-size:24px;position:relative;overflow:hidden}
+.crow .meta{flex:1;min-width:0}
+.crow .meta .top{display:flex;justify-content:space-between;align-items:center}
+.crow .name{font-size:15px;font-weight:bold}
+.crow .time{font-size:11px;color:var(--ink-faint)}
+.crow .msg{font-size:13px;color:var(--ink-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px}
+.badge{background:var(--sunset);color:#3a1500;font-size:11px;font-weight:bold;border-radius:10px;padding:1px 7px;margin-left:8px}
+.crow .pin{font-size:11px;color:var(--lamp);background:rgba(255,212,126,.12);border-radius:8px;padding:2px 8px;margin-top:4px;display:inline-block}
+
+/* FAB */
+.fab{position:absolute;right:18px;bottom:96px;z-index:30;display:flex;flex-direction:column;gap:10px;align-items:flex-end}
+.fab button{border:none;cursor:pointer;font-family:'Jua';color:#3a1500;font-size:14px;
+  background:linear-gradient(120deg,var(--lamp),var(--sunset));border-radius:30px;padding:14px 18px;
+  box-shadow:0 10px 26px rgba(255,154,82,.4);display:flex;align-items:center;gap:8px}
+
+/* ===== 하단 탭 ===== */
+.tabbar{flex:0 0 auto;height:74px;display:flex;align-items:center;justify-content:space-around;
+  background:linear-gradient(180deg,rgba(13,16,38,.4),rgba(8,10,26,.95));
+  border-top:1px solid var(--line);backdrop-filter:blur(12px);position:relative;z-index:40}
+.tab{background:none;border:none;color:var(--ink-faint);font-size:11px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;font-family:inherit;padding:4px 14px}
+.tab .ic{font-size:21px;filter:grayscale(.4);opacity:.7}
+.tab.on{color:var(--lamp)}
+.tab.on .ic{filter:none;opacity:1;transform:translateY(-2px);transition:.2s}
+
+/* ===== 채팅방 ===== */
+.chatbg{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.msgs{flex:1;overflow-y:auto;padding:14px 14px 8px;display:flex;flex-direction:column;gap:9px}
+.msgs::-webkit-scrollbar{width:0}
+.bub{max-width:74%;padding:10px 14px;border-radius:18px;font-size:14px;line-height:1.45;position:relative;animation:pop .3s}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}}
+.bub.you{align-self:flex-start;background:var(--bubble-you);border-bottom-left-radius:6px}
+.bub.me{align-self:flex-end;background:var(--bubble-me);color:#fff;border-bottom-right-radius:6px;box-shadow:0 4px 14px rgba(255,107,107,.3)}
+.bub .who{font-size:11px;color:var(--lamp);margin-bottom:3px;font-weight:bold}
+.bub .t{font-size:10px;opacity:.6;margin-top:4px;text-align:right}
+.daypill{align-self:center;font-size:11px;color:var(--ink-faint);background:rgba(255,255,255,.05);padding:4px 12px;border-radius:12px;margin:4px 0}
+.sysline{align-self:center;font-size:12px;color:var(--ink-dim);text-align:center;padding:6px 14px;background:rgba(124,107,214,.14);border-radius:14px;max-width:85%}
+
+/* 초대 카드 (채팅 안) */
+.invite-card{align-self:flex-end;max-width:78%;background:linear-gradient(150deg,var(--purple-2),var(--purple-1));border-radius:18px;padding:14px;border:1px solid rgba(255,255,255,.14);box-shadow:var(--shadow);animation:pop .3s}
+.invite-card.in{align-self:flex-start}
+.invite-card .ic-emoji{font-size:30px}
+.invite-card .ic-title{font-family:'Jua';font-size:16px;margin:6px 0 2px}
+.invite-card .ic-desc{font-size:12px;color:var(--ink-dim)}
+.invite-card .ic-act{display:flex;gap:8px;margin-top:12px}
+.invite-card .ic-act button{flex:1;border:none;border-radius:12px;padding:9px;font-family:'Jua';font-size:13px;cursor:pointer}
+.btn-accept{background:linear-gradient(120deg,var(--lamp),var(--sunset));color:#3a1500}
+.btn-avoid{background:rgba(255,255,255,.12);color:var(--ink)}
+
+/* 입력바 */
+.inputbar{flex:0 0 auto;display:flex;gap:8px;align-items:center;padding:10px 12px;border-top:1px solid var(--line);background:rgba(8,10,26,.6)}
+.inputbar .plus{width:40px;height:40px;border-radius:14px;border:none;background:linear-gradient(120deg,var(--purple-2),var(--purple-glow));color:#fff;font-size:20px;cursor:pointer;flex:0 0 auto}
+.inputbar input{flex:1;background:rgba(255,255,255,.08);border:1px solid var(--line);border-radius:20px;padding:11px 16px;color:var(--ink);font-family:inherit;font-size:14px;outline:none}
+.inputbar .send{width:40px;height:40px;border-radius:14px;border:none;background:linear-gradient(120deg,var(--sunset),var(--sunset-deep));color:#fff;font-size:17px;cursor:pointer;flex:0 0 auto}
+.emoji-tray{display:flex;gap:6px;flex-wrap:wrap;padding:8px 12px;border-top:1px solid var(--line);background:rgba(8,10,26,.6);max-height:0;overflow:hidden;transition:max-height .3s}
+.emoji-tray.open{max-height:160px}
+.emoji-tray .e{font-size:24px;cursor:pointer;padding:6px;border-radius:10px}
+.emoji-tray .e:active{background:rgba(255,255,255,.1)}
+
+/* ===== 초대 도착 화면 ===== */
+.arrival{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;position:relative;overflow:hidden}
+.knock-title{font-family:'Jua';font-size:24px;margin:18px 0 6px;line-height:1.35}
+.knock-sub{font-size:13px;color:var(--ink-dim);margin-bottom:8px}
+.knock-from{font-size:13px;color:var(--lamp);margin-bottom:26px}
+.scene{width:230px;height:230px;position:relative;margin-bottom:6px}
+.bigbtns{display:flex;flex-direction:column;gap:12px;width:100%;max-width:280px;margin-top:10px}
+.bigbtns button{border:none;border-radius:18px;padding:16px;font-family:'Jua';font-size:17px;cursor:pointer}
+.bigbtns .open{background:linear-gradient(120deg,var(--lamp),var(--sunset));color:#3a1500;box-shadow:0 10px 30px rgba(255,154,82,.4)}
+.bigbtns .dodge{background:rgba(255,255,255,.08);color:var(--ink-dim);border:1px solid var(--line)}
+
+/* 문 두드림 애니메이션 */
+@keyframes knock{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px) rotate(-1deg)}75%{transform:translateX(3px) rotate(1deg)}}
+.knocking{animation:knock .5s infinite}
+
+/* ===== 초대장 상세 ===== */
+.detail{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:26px;text-align:center}
+.ticket{width:100%;max-width:300px;background:linear-gradient(165deg,#2c2f6b,#1a1c44);border-radius:24px;padding:26px 22px;border:1px solid rgba(255,255,255,.14);box-shadow:var(--shadow);position:relative;overflow:hidden}
+.ticket::before,.ticket::after{content:"";position:absolute;width:26px;height:26px;border-radius:50%;background:var(--navy-0);top:50%;transform:translateY(-50%)}
+.ticket::before{left:-13px}.ticket::after{right:-13px}
+.ticket .emoji{font-size:46px}
+.ticket .place{font-family:'Jua';font-size:22px;margin:10px 0 4px}
+.ticket .dash{border:none;border-top:1px dashed var(--line);margin:16px 0}
+.ticket .quote{font-size:15px;color:var(--lamp);font-style:italic;margin:8px 0}
+.ticket .info{font-size:12px;color:var(--ink-dim);line-height:1.7}
+.ticket .timepill{display:inline-block;background:rgba(255,154,82,.15);color:var(--sunset);border-radius:14px;padding:4px 14px;font-size:12px;margin-top:8px;font-weight:bold}
+
+/* ===== 회피 연출 ===== */
+.dodge-scene{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;position:relative;overflow:hidden}
+.dodge-scene .stage{width:240px;height:200px;position:relative;margin-bottom:24px}
+.dodge-cap{font-family:'Jua';font-size:18px;margin-bottom:8px}
+.dodge-desc{font-size:14px;color:var(--ink-dim);max-width:260px;line-height:1.6}
+
+/* ===== 장소 대화방 ===== */
+.place-room{flex:1;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.place-sky{position:absolute;inset:0;z-index:0}
+.room-top{position:relative;z-index:3;padding:10px 16px;display:flex;align-items:center;gap:10px;background:linear-gradient(180deg,rgba(0,0,0,.45),transparent)}
+.room-top .rt-name{font-family:'Jua';font-size:16px;flex:1}
+.room-top .rt-sub{font-size:11px;color:var(--ink-dim)}
+.timer{font-family:'Jua';font-size:18px;background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:14px;padding:6px 12px;letter-spacing:1px}
+.timer.warn{color:var(--sunset);border-color:var(--sunset);animation:tw 1s infinite}
+.room-msgs{position:relative;z-index:3;flex:1;overflow-y:auto;padding:10px 14px;display:flex;flex-direction:column;gap:9px}
+.room-msgs::-webkit-scrollbar{width:0}
+.room-chars{position:relative;z-index:2;height:120px;display:flex;align-items:flex-end;justify-content:center;gap:18px;padding-bottom:6px}
+.char{display:flex;flex-direction:column;align-items:center;gap:4px}
+.char .nm{font-size:10px;color:var(--ink-dim)}
+.action-tray{position:relative;z-index:3;display:flex;gap:8px;padding:8px 14px;overflow-x:auto}
+.action-tray::-webkit-scrollbar{height:0}
+.act-btn{flex:0 0 auto;font-size:12px;background:rgba(0,0,0,.35);border:1px solid var(--line);color:var(--ink);border-radius:16px;padding:7px 12px;cursor:pointer;white-space:nowrap}
+.act-btn:active{background:var(--purple-2)}
+
+/* 종료 연출 */
+.endscene{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;position:relative;overflow:hidden;animation:fadeup .6s}
+@keyframes fadeup{from{opacity:0}}
+.endscene .em{font-size:54px;margin-bottom:10px;animation:floaty 3s ease-in-out infinite}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.endscene .etext{font-family:'Jua';font-size:20px;margin-bottom:8px}
+.endscene .esub{font-size:13px;color:var(--ink-dim);margin-bottom:26px}
+
+/* ===== 장소 모아보기 ===== */
+.places-grid{padding:8px 16px 100px;display:flex;flex-direction:column;gap:14px}
+.place-card{border-radius:22px;overflow:hidden;position:relative;height:130px;cursor:pointer;border:1px solid var(--line);box-shadow:var(--shadow)}
+.place-card .pc-sky{position:absolute;inset:0}
+.place-card .pc-info{position:absolute;left:0;right:0;bottom:0;padding:14px 16px;background:linear-gradient(0deg,rgba(5,6,15,.85),transparent);z-index:2}
+.place-card .pc-name{font-family:'Jua';font-size:19px;display:flex;align-items:center;gap:8px}
+.place-card .pc-vibe{font-size:12px;color:var(--ink-dim);margin-top:3px}
+.place-card .pc-time{position:absolute;top:12px;right:12px;z-index:2;font-size:11px;background:rgba(0,0,0,.45);border:1px solid var(--line);border-radius:12px;padding:4px 10px;font-weight:bold}
+
+/* 장소 상세 시트 */
+.sheet-mask{position:absolute;inset:0;z-index:80;background:rgba(4,5,14,.6);backdrop-filter:blur(4px);display:none;align-items:flex-end}
+.sheet-mask.open{display:flex;animation:fadeup .3s}
+.sheet{width:100%;background:linear-gradient(180deg,var(--navy-2),var(--navy-1));border-radius:28px 28px 0 0;padding:8px 22px 26px;border-top:1px solid var(--line);max-height:88%;overflow-y:auto;animation:slideup .35s}
+@keyframes slideup{from{transform:translateY(100%)}}
+.sheet .grip{width:42px;height:5px;border-radius:3px;background:rgba(255,255,255,.2);margin:6px auto 14px}
+.sheet h2{font-family:'Jua';font-size:24px;margin:0 0 2px;display:flex;align-items:center;gap:10px}
+.sheet .s-vibe{font-size:13px;color:var(--lamp);font-style:italic;margin-bottom:14px}
+.sheet .s-sec{margin:14px 0}
+.sheet .s-sec h4{font-size:12px;color:var(--ink-faint);margin:0 0 7px;letter-spacing:.5px}
+.tagrow{display:flex;flex-wrap:wrap;gap:7px}
+.tag{font-size:12px;background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:14px;padding:6px 12px;color:var(--ink-dim)}
+.codebox{display:flex;gap:8px;margin-top:8px}
+.codebox input{flex:1;background:rgba(0,0,0,.3);border:1px dashed var(--purple-glow);border-radius:14px;padding:12px;color:var(--lamp);font-family:'Jua';letter-spacing:1.5px;text-align:center;font-size:15px}
+.bigcta{width:100%;border:none;border-radius:18px;padding:16px;font-family:'Jua';font-size:17px;cursor:pointer;margin-top:18px;background:linear-gradient(120deg,var(--lamp),var(--sunset));color:#3a1500;box-shadow:0 10px 30px rgba(255,154,82,.35)}
+
+/* ===== 캐릭터 아바타 ===== */
+.avatar-screen{padding:8px 20px 100px}
+.av-stage{display:grid;place-items:center;padding:18px 0 8px}
+.av-stage .ring{width:200px;height:200px;border-radius:50%;background:radial-gradient(circle at 50% 30%,rgba(124,107,214,.4),transparent 60%);display:grid;place-items:center}
+.av-name{text-align:center;font-family:'Jua';font-size:22px;margin:4px 0 2px}
+.av-status{text-align:center;font-size:12px;color:var(--ink-dim);margin-bottom:14px}
+.cz-sec{margin:14px 0}
+.cz-sec h4{font-size:13px;color:var(--ink-dim);margin:0 0 8px}
+.swatches{display:flex;gap:10px;flex-wrap:wrap}
+.sw{width:42px;height:42px;border-radius:14px;cursor:pointer;border:2px solid transparent}
+.sw.on{border-color:var(--lamp);transform:scale(1.08)}
+.face-opts{display:flex;gap:10px;flex-wrap:wrap}
+.fo{width:54px;height:54px;border-radius:16px;background:rgba(255,255,255,.06);border:2px solid transparent;cursor:pointer;display:grid;place-items:center;font-size:26px}
+.fo.on{border-color:var(--lamp);background:rgba(255,212,126,.12)}
+
+/* 토스트 */
+.toast{position:absolute;left:50%;bottom:96px;transform:translateX(-50%) translateY(20px);z-index:100;
+  background:rgba(8,10,26,.95);border:1px solid var(--line);color:var(--ink);padding:11px 18px;border-radius:16px;font-size:13px;opacity:0;transition:.3s;pointer-events:none;box-shadow:var(--shadow);max-width:80%;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%)}
+
+/* 빈 화면 안내 */
+.empty{padding:60px 30px;text-align:center;color:var(--ink-faint)}
+.empty .em{font-size:46px;opacity:.6;margin-bottom:12px}
+.section-title{font-family:'Jua';font-size:15px;padding:14px 20px 4px;color:var(--ink-dim)}
+
+/* 작은 라벨 */
+.hint{font-size:11px;color:var(--ink-faint);text-align:center;padding:6px}
+</style>
+</head>
+<body>
+<div class="bg-stars" id="bgStars"></div>
+
+<div class="phone">
+  <div class="notch"></div>
+  <div class="statusbar">
+    <span id="clock">10:18</span>
+    <span class="right">📶 🔋 87%</span>
+  </div>
+
+  <div class="screen-wrap" id="screenWrap"><!-- screens injected --></div>
+
+  <!-- 하단 탭 (홈/장소/캐릭터일 때만 표시) -->
+  <div class="tabbar" id="tabbar">
+    <button class="tab on" data-tab="home" onclick="go('home')"><span class="ic">🏠</span>홈</button>
+    <button class="tab" data-tab="places" onclick="go('places')"><span class="ic">🗺️</span>장소</button>
+    <button class="tab" data-tab="avatar" onclick="go('avatar')"><span class="ic">🧑‍🎤</span>캐릭터</button>
+    <button class="tab" data-tab="profile" onclick="go('profile')"><span class="ic">🌙</span>나</button>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <div class="sheet-mask" id="sheetMask" onclick="closeSheet(event)"></div>
+</div>
+
+<script>
+/* =====================================================================
+   데이터 모델
+   ===================================================================== */
+const ME = { name:'현채', color:'#ff9a52', face:'😎' };
+
+const PLACES = {
+  rooftop:{
+    id:'rooftop', name:'옥상', emoji:'🌙', mins:5,
+    vibe:'야 잠깐 올라와봐',
+    quote:'"잠깐 옥상 올래?"',
+    desc:'밤하늘 · 도시 야경 · 별빛 아래 진솔한 대화',
+    sky:'rooftop',
+    code:'ROOM-YACHA-001',
+    topics:['진솔한 대화','밤하늘','고민','속마음'],
+    actions:['🌟 별 보기','🚧 난간 기대기','🪑 앉아 있기'],
+    invite:'문 두드리기 · 종이비행기 날리기',
+    avoidCap:'옥상은 부담스러워서…',
+    avoidDesc:'문고리를 잡았다가 놓고, 교실 천장으로 피신했습니다.',
+    end:'🌙 옥상은 다시 조용해졌습니다.',
+    endSub:'별빛만 자리에 남았어요.',
+    knock:'똑똑,\n누군가 옥상 문을 두드리고 있습니다.',
+    bot:['왔네 ㅋㅋ 올라오느라 고생','야경 진짜 미쳤다 봐봐','요즘 좀 어때 진짜','…사실 너한테 할 말 있었어','별 떨어진다 소원 빌어']
+  },
+  store:{
+    id:'store', name:'편의점 앞 의자', emoji:'🏪', mins:10,
+    vibe:'크르르르갉, 아무말 대잔치',
+    quote:'"컵라면 ㄱ?"',
+    desc:'노란 조명 아래 컵라면 먹으며 떠드는 분위기',
+    sky:'store',
+    code:'ROOM-CU-2025',
+    topics:['수다','장난','밈','아무말'],
+    actions:['🍜 컵라면 먹기','🥤 음료 마시기','🪑 의자 흔들기'],
+    invite:'음료수 캔 굴리기',
+    avoidCap:'아이스크림 구경하는 척…',
+    avoidDesc:'냉장고 뒤에 숨어서 아이스크림을 고르는 척합니다.',
+    end:'🏪 편의점 의자가 비었습니다.',
+    endSub:'컵라면 국물만 식어가요.',
+    knock:'데구르르…\n음료수 캔이 굴러왔습니다.',
+    bot:['크르르르갉','컵라면 면치기 ㄱㄱ','야 이 밈 봤냐 ㅋㅋㅋㅋ','삼각김밥 내려놔','오늘 1+1 개꿀이네']
+  },
+  park:{
+    id:'park', name:'공원 벤치', emoji:'🌳', mins:15,
+    vibe:'조용히, 소수인원 근황토크',
+    quote:'"잠깐 걸을래?"',
+    desc:'바람 부는 공원에서 고민 상담 · 근황 토크',
+    sky:'park',
+    code:'ROOM-PARK-777',
+    topics:['고민상담','근황토크','소수인원','산책'],
+    actions:['🛋️ 벤치에 눕기','🐦 새 구경하기','🍃 바람 쐬기'],
+    invite:'벤치 두드리기',
+    avoidCap:'슬금슬금…',
+    avoidDesc:'벤치 끝으로 슬금슬금 멀어지며 비둘기를 구경합니다.',
+    end:'🌳 공원에 다시 바람이 붑니다.',
+    endSub:'벤치엔 낙엽 한 장이 남았어요.',
+    knock:'토독,\n누군가 벤치를 두드립니다.',
+    bot:['바람 좋다 그치','요즘 진짜 어때?','천천히 말해도 돼','비둘기 봐 ㅋㅋ 살쪘다','고민 있으면 들어줄게']
+  },
+  bus:{
+    id:'bus', name:'버스정류장', emoji:'🚏', mins:3,
+    vibe:'스쳐가는 인연, 짧은 대화',
+    quote:'"버스 오기 전까지만"',
+    desc:'3분 제한 · 잠깐 스쳐가는 짧은 대화',
+    sky:'bus',
+    code:'ROOM-BUS-153',
+    topics:['짧은 대화','스쳐가는 인연','3분 제한'],
+    actions:['🕒 시간표 보기','🪑 벤치 앉기','👀 버스 기다리기'],
+    invite:'정류장에서 손 흔들기',
+    avoidCap:'버스를 타고 사라짐…',
+    avoidDesc:'방금 도착한 버스를 타고 사라졌습니다. 다음 정류장에서 내릴 예정입니다.',
+    end:'🚏 버스가 떠났습니다.',
+    endSub:'정류장에 다음 사람이 기다려요.',
+    knock:'끼익—\n누군가 정류장에서 손을 흔듭니다.',
+    bot:['버스 곧 와 빨리 말해','3분이면 충분하지 뭐','담에 또 보자','어 내 버스다 ㅋㅋ','짧게라도 반가웠어']
+  },
+  pcroom:{
+    id:'pcroom', name:'PC방', emoji:'🎮', mins:30,
+    vibe:'게임 모집 · 랭크 · 스크림',
+    quote:'"한 판 콜?"',
+    desc:'게임 중심 · 랭크전 · 스크림 모집',
+    sky:'pcroom',
+    code:'ROOM-PC-GG',
+    topics:['게임 모집','랭크','스크림','듀오'],
+    actions:['⌨️ 키보드 치기','🖱️ 게임하기','🥤 콜라 마시기'],
+    invite:'게임 초대 알림',
+    avoidCap:'랭크전 중…',
+    avoidDesc:'게임 시작 버튼을 눌렀습니다. 지금은 랭크전 중입니다.',
+    end:'🎮 자리가 로그아웃 되었습니다.',
+    endSub:'모니터에 대기 화면만 떠 있어요.',
+    knock:'띠링!\n게임 초대 알림이 도착했습니다.',
+    bot:['한 판 콜?','내가 정글 갈게','상대 개잘함 ㅋㅋ','지지 한타 ㄱㄱ','듀오 더 부를까?']
+  },
+  cafe:{
+    id:'cafe', name:'카페', emoji:'☕', mins:20,
+    vibe:'잔잔한 1:1 대화',
+    quote:'"커피 한잔 할래?"',
+    desc:'잔잔한 음악과 함께하는 1:1 대화',
+    sky:'cafe',
+    code:'ROOM-CAFE-01',
+    topics:['1:1 대화','잔잔','커피','조용'],
+    actions:['☕ 커피 마시기','📖 책 보기','🎵 음악 듣기'],
+    invite:'메뉴판 건네기',
+    avoidCap:'메뉴판 뒤로…',
+    avoidDesc:'메뉴판 뒤에 숨어 한참 고민하는 척합니다.',
+    end:'☕ 카페에 잔잔한 음악만 남았습니다.',
+    endSub:'식은 커피 한 잔이 남았어요.',
+    knock:'사르륵,\n누군가 메뉴판을 건넵니다.',
+    bot:['뭐 마실래?','여기 라떼 맛있어','조용해서 좋다','천천히 얘기하자','음악 좋지 않아?']
+  }
+};
+
+/* 친구/채팅 데이터 */
+const FRIENDS = [
+  {id:'dalgyal', name:'달걀', face:'🥚', color:'#ffd47e'},
+  {id:'jihun',  name:'지훈', face:'🧑', color:'#7c6bd6'},
+  {id:'mina',   name:'미나', face:'👧', color:'#ff9a52'},
+  {id:'crew',   name:'우리들의 옥상', face:'🌙', color:'#5b4a9e', group:true, members:['달걀','지훈','미나','현채']},
+];
+
+let CHATS = {
+  dalgyal:{ peer:FRIENDS[0], last:'문 열어줘 옥상 춥다 ㅠ', time:'22:14', unread:2, pinned:'🌙 옥상 초대 진행중',
+    msgs:[
+      {s:'you', t:'자?'},
+      {s:'you', t:'오늘 달 진짜 크다 봐봐 🌕'},
+      {s:'me',  t:'안자 ㅋㅋ 왜'},
+      {s:'you', t:'옥상 올라올래? 할 말 있어'},
+    ]},
+  jihun:{ peer:FRIENDS[1], last:'PC방 ㄱ?', time:'21:02', unread:0,
+    msgs:[
+      {s:'you', t:'롤 한판?'},
+      {s:'me', t:'콜 부캐로'},
+      {s:'you', t:'PC방 ㄱ?'},
+    ]},
+  mina:{ peer:FRIENDS[2], last:'편의점에서 봐~', time:'어제', unread:0,
+    msgs:[
+      {s:'me', t:'배고프다'},
+      {s:'you', t:'편의점에서 봐~ 컵라면 ㄱ'},
+    ]},
+  crew:{ peer:FRIENDS[3], last:'미나: 다들 옥상에서 모이자', time:'18:30', unread:5,
+    msgs:[
+      {s:'you', t:'주말에 뭐함', who:'지훈'},
+      {s:'you', t:'다들 옥상에서 모이자', who:'미나'},
+      {s:'me', t:'콜콜 ㅋㅋ'},
+    ]},
+};
+
+const EMOJIS = ['🌙','✨','🌃','🍜','🥤','🎮','☕','🌳','🚏','🏪','😎','🥺','😴','🔥','💜','⭐','🙌','😂','🥚','📄'];
+
+/* =====================================================================
+   상태 + 라우팅
+   ===================================================================== */
+const state = { screen:'home', tab:'home', chat:null, place:null, room:null, sheetPlace:null };
+const wrap = document.getElementById('screenWrap');
+const screens = {};
+
+function mountScreen(id, html){
+  let el = screens[id];
+  if(!el){ el=document.createElement('div'); el.className='screen'; el.id='scr-'+id; wrap.appendChild(el); screens[id]=el; }
+  el.innerHTML = html;
+  return el;
+}
+function show(id){
+  Object.values(screens).forEach(s=>s.classList.remove('active'));
+  if(screens[id]) screens[id].classList.add('active');
+  // 탭바 표시 여부
+  const tabScreens=['home','places','avatar','profile'];
+  document.getElementById('tabbar').style.display = tabScreens.includes(id)?'flex':'none';
+  // 탭 하이라이트
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on', t.dataset.tab===id));
+}
+
+function go(id){
+  state.screen=id;
+  if(id==='home') renderHome();
+  else if(id==='places') renderPlaces();
+  else if(id==='avatar') renderAvatar();
+  else if(id==='profile') renderProfile();
+  show(id);
+}
+
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+/* =====================================================================
+   하늘/배경 SVG (장소별)
+   ===================================================================== */
+function skySVG(type){
+  const city = `<g opacity="0.9">
+      <rect x="0" y="150" width="40" height="60" fill="#0c1030"/>
+      <rect x="45" y="120" width="34" height="90" fill="#10153c"/>
+      <rect x="84" y="160" width="46" height="50" fill="#0c1030"/>
+      <rect x="135" y="100" width="30" height="110" fill="#141a45"/>
+      <rect x="170" y="140" width="44" height="70" fill="#0c1030"/>
+      <rect x="220" y="115" width="36" height="95" fill="#10153c"/>
+      <rect x="262" y="155" width="48" height="55" fill="#0c1030"/>
+      <rect x="315" y="125" width="32" height="85" fill="#141a45"/>
+      <rect x="352" y="150" width="40" height="60" fill="#10153c"/>
+      ${winDots()}
+    </g>`;
+  function winDots(){ let s=''; const xs=[6,20,50,62,90,108,140,152,178,196,228,242,270,290,320,338,360,378];
+    xs.forEach((x,i)=>{ for(let r=0;r<3;r++){ if(Math.random()>0.45) s+=`<rect x="${x}" y="${130+r*20}" width="5" height="6" fill="#ffd47e" opacity="${0.4+Math.random()*0.5}"/>`; }});
+    return s; }
+  const stars = Array.from({length:40}).map(()=>`<circle cx="${Math.random()*390}" cy="${Math.random()*120}" r="${Math.random()*1.4+.4}" fill="#fff4cf" opacity="${.3+Math.random()*.6}"/>`).join('');
+
+  const skies = {
+    rooftop:`<defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#0a0e2a"/><stop offset="0.55" stop-color="#1a1546"/><stop offset="1" stop-color="#3a2257"/></linearGradient></defs>
+      <rect width="390" height="220" fill="url(#g1)"/>${stars}
+      <circle cx="310" cy="50" r="26" fill="#fff4cf" opacity="0.95"/><circle cx="300" cy="44" r="22" fill="#1a1546"/>
+      ${city}`,
+    store:`<defs><linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#141436"/><stop offset="1" stop-color="#2a2140"/></linearGradient></defs>
+      <rect width="390" height="220" fill="url(#g2)"/>${stars}
+      <rect x="60" y="70" width="270" height="120" rx="8" fill="#10204a"/>
+      <rect x="60" y="70" width="270" height="34" fill="#1f7a5a"/>
+      <rect x="74" y="78" width="120" height="18" rx="4" fill="#ffd47e" opacity="0.9"/>
+      <rect x="78" y="116" width="234" height="64" fill="#ffe9a8" opacity="0.18"/>
+      <circle cx="100" cy="60" r="0"/>
+      <rect x="0" y="180" width="390" height="40" fill="#0c1030"/>`,
+    park:`<defs><linearGradient id="g3" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#0c1a2e"/><stop offset="1" stop-color="#16352e"/></linearGradient></defs>
+      <rect width="390" height="220" fill="url(#g3)"/>${stars}
+      <circle cx="320" cy="46" r="22" fill="#fff4cf" opacity="0.9"/>
+      <ellipse cx="80" cy="150" rx="60" ry="70" fill="#13402f"/><rect x="74" y="150" width="12" height="50" fill="#2a1d12"/>
+      <ellipse cx="300" cy="160" rx="70" ry="78" fill="#0f3327"/><rect x="294" y="160" width="12" height="50" fill="#2a1d12"/>
+      <rect x="0" y="190" width="390" height="30" fill="#0c1f18"/>`,
+    bus:`<defs><linearGradient id="g4" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#101232"/><stop offset="1" stop-color="#2a2440"/></linearGradient></defs>
+      <rect width="390" height="220" fill="url(#g4)"/>${stars}${city}
+      <rect x="40" y="120" width="150" height="70" rx="6" fill="#161b44"/>
+      <rect x="40" y="112" width="160" height="12" rx="4" fill="#2a3170"/>
+      <rect x="48" y="120" width="6" height="70" fill="#2a3170"/><rect x="184" y="120" width="6" height="70" fill="#2a3170"/>
+      <rect x="0" y="188" width="390" height="32" fill="#0b0f28"/>
+      <circle cx="120" cy="100" r="6" fill="#ffd47e" opacity="0.8"/>`,
+    pcroom:`<defs><linearGradient id="g5" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#0a0a26"/><stop offset="1" stop-color="#1a0f33"/></linearGradient></defs>
+      <rect width="390" height="220" fill="url(#g5)"/>
+      ${Array.from({length:6}).map((_,i)=>`<rect x="${20+i*62}" y="${60+(i%2)*16}" width="44" height="30" rx="3" fill="#0d2440" stroke="#2a6cff" stroke-width="1.5"/><rect x="${20+i*62}" y="${62+(i%2)*16}" width="44" height="26" fill="#1b5cff" opacity="${.25+Math.random()*.4}"/>`).join('')}
+      ${Array.from({length:30}).map(()=>`<circle cx="${Math.random()*390}" cy="${Math.random()*50}" r="1.5" fill="#7c6bd6" opacity="${Math.random()}"/>`).join('')}
+      <rect x="0" y="190" width="390" height="30" fill="#0a0a26"/>`,
+    cafe:`<defs><linearGradient id="g6" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#1a1330"/><stop offset="1" stop-color="#3a2a2a"/></linearGradient></defs>
+      <rect width="390" height="220" fill="url(#g6)"/>
+      <rect x="40" y="60" width="310" height="130" rx="10" fill="#2a1d28" opacity="0.7"/>
+      <circle cx="90" cy="70" r="14" fill="#ffd47e" opacity="0.85"/><circle cx="200" cy="62" r="14" fill="#ffd47e" opacity="0.85"/><circle cx="310" cy="70" r="14" fill="#ffd47e" opacity="0.85"/>
+      <rect x="70" y="120" width="60" height="40" rx="6" fill="#4a3326"/>
+      <rect x="260" y="120" width="60" height="40" rx="6" fill="#4a3326"/>
+      <rect x="0" y="180" width="390" height="40" fill="#1a1018"/>`,
+  };
+  return `<svg viewBox="0 0 390 220" preserveAspectRatio="xMidYMid slice" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">${skies[type]||skies.rooftop}</svg>`;
+}
+
+/* 캐릭터 SVG */
+function charSVG(color, face, size=70, pose='idle'){
+  const f={ '😎':'😎','🥚':'🥚','🧑':'🙂','👧':'😊','😊':'😊','🙂':'🙂','🥺':'🥺','😴':'😴','🤓':'🤓','😆':'😆' }[face]||'🙂';
+  return `<div style="width:${size}px;height:${size}px;position:relative;${pose==='wave'?'animation:knock .6s infinite':''}">
+    <svg viewBox="0 0 80 90" width="${size}" height="${size}">
+      <ellipse cx="40" cy="86" rx="20" ry="4" fill="#000" opacity="0.25"/>
+      <rect x="24" y="40" width="32" height="40" rx="14" fill="${color}"/>
+      <circle cx="40" cy="30" r="20" fill="#ffe0c2"/>
+      <path d="M20 28 a20 20 0 0 1 40 0 v-4 a20 20 0 0 0 -40 0 Z" fill="#3a2a4a"/>
+    </svg>
+    <div style="position:absolute;top:${size*0.18}px;left:0;right:0;text-align:center;font-size:${size*0.34}px">${f}</div>
+  </div>`;
+}
+
+/* =====================================================================
+   화면: 홈 (채팅 목록)
+   ===================================================================== */
+let homeFilter='all';
+function renderHome(){
+  const rows = Object.entries(CHATS).map(([id,c])=>{
+    const showRow = homeFilter==='all' || (homeFilter==='group'&&c.peer.group) || (homeFilter==='unread'&&c.unread>0);
+    if(!showRow) return '';
+    return `<div class="crow" onclick="openChat('${id}')">
+      <div class="avatar" style="background:linear-gradient(135deg,${c.peer.color}55,${c.peer.color}22)">${c.peer.face}</div>
+      <div class="meta">
+        <div class="top"><span class="name">${c.peer.name}</span><span class="time">${c.time}</span></div>
+        <div class="top"><span class="msg">${c.last}</span>${c.unread?`<span class="badge">${c.unread}</span>`:''}</div>
+        ${c.pinned?`<span class="pin">${c.pinned}</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+
+  mountScreen('home', `
+    <div class="logo-head">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="moon">🌙</span><span class="title">진실의 옥상</span>
+      </div>
+      <div class="tagline">야, 잠깐 옥상으로 올라올래?</div>
+    </div>
+    <div class="chips">
+      <div class="chip ${homeFilter==='all'?'on':''}" onclick="setFilter('all')">전체</div>
+      <div class="chip ${homeFilter==='unread'?'on':''}" onclick="setFilter('unread')">안 읽음</div>
+      <div class="chip ${homeFilter==='group'?'on':''}" onclick="setFilter('group')">그룹</div>
+      <div class="chip" onclick="go('places')">🗺️ 장소</div>
+      <div class="chip" onclick="openCodeSheet()">🔑 초대 코드</div>
+    </div>
+    <div class="scroll"><div class="clist">${rows||'<div class="empty"><div class="em">🌙</div>조건에 맞는 대화가 없어요</div>'}</div></div>
+    <div class="fab">
+      <button onclick="openCodeSheet()" style="font-size:12px;padding:11px 15px;background:linear-gradient(120deg,var(--purple-2),var(--purple-glow));color:#fff">🔑 코드 입장</button>
+      <button onclick="newChatPrompt()">＋ 새 대화</button>
+    </div>
+  `);
+}
+function setFilter(f){ homeFilter=f; renderHome(); }
+function newChatPrompt(){ toast('친구를 선택해 대화를 시작하세요 🌙'); }
+
+/* =====================================================================
+   화면: 일반 채팅방
+   ===================================================================== */
+function openChat(id){
+  state.chat=id;
+  const c=CHATS[id]; c.unread=0;
+  renderChat(id);
+  show('chat');
+  state.screen='chat';
+  scrollMsgs();
+}
+function renderChat(id){
+  const c=CHATS[id];
+  const msgs = c.msgs.map(m=>msgHTML(m,c)).join('');
+  mountScreen('chat', `
+    <div class="appbar">
+      <button class="back" onclick="go('home')">‹</button>
+      <div class="avatar" style="width:38px;height:38px;font-size:19px;background:linear-gradient(135deg,${c.peer.color}55,${c.peer.color}22)">${c.peer.face}</div>
+      <div style="flex:1">
+        <h1 style="font-size:17px">${c.peer.name}</h1>
+        <div class="sub">${c.peer.group?c.peer.members.join(', '):'온라인'}</div>
+      </div>
+      <button class="ico-btn" onclick="toast('통화는 데모에서 생략돼요 ☎️')">☎️</button>
+    </div>
+    <div class="chatbg">
+      <div class="msgs" id="chatMsgs"><div class="daypill">오늘</div>${msgs}</div>
+      <div class="emoji-tray" id="emojiTray">${EMOJIS.map(e=>`<span class="e" onclick="sendChat('${e}')">${e}</span>`).join('')}</div>
+      <div class="inputbar">
+        <button class="plus" onclick="openInvitePicker()" title="장소 초대장 보내기">📍</button>
+        <input id="chatInput" placeholder="메시지 입력…" onkeydown="if(event.key==='Enter')sendChat()">
+        <button class="plus" style="background:rgba(255,255,255,.08)" onclick="toggleEmoji()">😊</button>
+        <button class="send" onclick="sendChat()">➤</button>
+      </div>
+    </div>
+  `);
+}
+function msgHTML(m,c){
+  if(m.type==='invite'){
+    const p=PLACES[m.place];
+    return `<div class="invite-card ${m.s==='you'?'in':''}">
+      <div class="ic-emoji">${p.emoji}</div>
+      <div class="ic-title">${p.mins}분 ${p.name} 초대장</div>
+      <div class="ic-desc">${p.quote} · ${m.s==='me'?'전송됨':'도착'}</div>
+      ${m.s==='you'?`<div class="ic-act">
+        <button class="btn-avoid" onclick="event.stopPropagation();startAvoid('${m.place}')">회피하기</button>
+        <button class="btn-accept" onclick="event.stopPropagation();showArrival('${m.place}','${c.peer.name}')">열어보기</button>
+      </div>`:`<div class="ic-desc" style="margin-top:8px;color:var(--lamp)">상대의 응답을 기다리는 중…</div>`}
+    </div>`;
+  }
+  if(m.type==='sys') return `<div class="sysline">${m.t}</div>`;
+  const who = (m.s==='you'&&c.peer.group&&m.who)?`<div class="who">${m.who}</div>`:'';
+  return `<div class="bub ${m.s}">${who}${m.t}</div>`;
+}
+function sendChat(emoji){
+  const inp=document.getElementById('chatInput');
+  const text = emoji || (inp?inp.value.trim():'');
+  if(!text) return;
+  const c=CHATS[state.chat];
+  c.msgs.push({s:'me',t:text}); c.last=text; c.time='지금';
+  if(inp) inp.value='';
+  renderChat(state.chat); scrollMsgs();
+  // 상대 자동 응답
+  setTimeout(()=>{
+    const replies=['ㅋㅋㅋ','오 진짜?','옥상 ㄱ?','그래그래','지금 나갈까','😎'];
+    const r=replies[Math.floor(Math.random()*replies.length)];
+    c.msgs.push({s:'you',t:r, who:c.peer.group?c.peer.members[Math.floor(Math.random()*3)]:null});
+    c.last=r;
+    if(state.screen==='chat'&&state.chat===c.peer.id){ renderChat(state.chat); scrollMsgs(); }
+  }, 900+Math.random()*700);
+}
+function toggleEmoji(){ document.getElementById('emojiTray').classList.toggle('open'); }
+function scrollMsgs(){ setTimeout(()=>{const m=document.getElementById('chatMsgs'); if(m)m.scrollTop=m.scrollHeight;},60); }
+
+/* =====================================================================
+   초대장 보내기 (장소 선택)
+   ===================================================================== */
+function openInvitePicker(){
+  const cards = Object.values(PLACES).map(p=>`
+    <div class="place-card" style="height:96px" onclick="sendInvite('${p.id}')">
+      <div class="pc-sky">${skySVG(p.sky)}</div>
+      <div class="pc-time">${p.mins}분</div>
+      <div class="pc-info">
+        <div class="pc-name" style="font-size:16px">${p.emoji} ${p.name}</div>
+        <div class="pc-vibe">${p.invite}</div>
+      </div>
+    </div>`).join('');
+  openSheetHTML(`
+    <h2>📨 초대장 보내기</h2>
+    <div class="s-vibe">어떤 장소로 ${CHATS[state.chat].peer.name}님을 초대할까요?</div>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-top:6px">${cards}</div>
+  `);
+}
+function sendInvite(placeId){
+  closeSheet();
+  const c=CHATS[state.chat]; const p=PLACES[placeId];
+  c.msgs.push({type:'invite', s:'me', place:placeId});
+  c.msgs.push({type:'sys', t:`${p.emoji} ${p.name} 초대장을 보냈어요. (${p.invite})`});
+  c.last=`${p.emoji} ${p.name} 초대장을 보냈어요`;
+  renderChat(state.chat); scrollMsgs();
+  // 상대가 초대장을 보내온 것처럼 데모: 잠시 후 내가 받는 초대도 시뮬레이션
+  setTimeout(()=>{
+    c.msgs.push({type:'sys', t:`${c.peer.name}님이 초대장을 확인했어요. 답장을 기다려요…`});
+    if(state.screen==='chat') { renderChat(state.chat); scrollMsgs(); }
+  },1100);
+  setTimeout(()=>{
+    // 상대도 나에게 초대장을 보냄 → 내가 받는 입장 체험
+    c.msgs.push({type:'invite', s:'you', place:placeId});
+    c.last=`${p.emoji} ${c.peer.name}님의 ${p.name} 초대장`;
+    if(state.screen==='chat'){ renderChat(state.chat); scrollMsgs(); }
+    toast(`${c.peer.name}님도 초대장을 보냈어요! 열어보기를 눌러보세요`);
+  },2200);
+}
+
+/* =====================================================================
+   초대 도착 화면 (문 두드림)
+   ===================================================================== */
+function showArrival(placeId, fromName){
+  const p=PLACES[placeId];
+  state.place=placeId;
+  mountScreen('arrival', `
+    <div class="appbar"><button class="back" onclick="go('home')">‹</button><h1 style="font-size:18px">초대 도착</h1></div>
+    <div class="arrival">
+      <div class="scene knocking">${arrivalSceneSVG(p)}</div>
+      <div class="knock-title">${p.knock.replace(/\n/g,'<br>')}</div>
+      <div class="knock-from">— ${fromName||'누군가'} 님으로부터</div>
+      <div class="bigbtns">
+        <button class="open" onclick="showDetail('${placeId}','${fromName||'누군가'}')">문 열기</button>
+        <button class="dodge" onclick="startAvoid('${placeId}')">회피하기</button>
+      </div>
+    </div>
+  `);
+  show('arrival'); state.screen='arrival';
+}
+function arrivalSceneSVG(p){
+  // 문 + 캐릭터 실루엣
+  return `<svg viewBox="0 0 230 230" width="230" height="230">
+    <defs><radialGradient id="lamp" cx="50%" cy="30%" r="60%"><stop offset="0" stop-color="#ffd47e" stop-opacity="0.5"/><stop offset="1" stop-color="#ffd47e" stop-opacity="0"/></radialGradient></defs>
+    <circle cx="115" cy="80" r="100" fill="url(#lamp)"/>
+    <rect x="70" y="40" width="90" height="150" rx="8" fill="#2a2150" stroke="#4a3a7a" stroke-width="3"/>
+    <rect x="80" y="50" width="70" height="60" rx="4" fill="#1a1438"/>
+    <circle cx="146" cy="120" r="5" fill="#ffd47e"/>
+    <text x="115" y="160" font-size="40" text-anchor="middle">${p.emoji}</text>
+    <text x="40" y="80" font-size="22">✊</text>
+  </svg>`;
+}
+
+/* =====================================================================
+   초대장 상세 (티켓)
+   ===================================================================== */
+function showDetail(placeId, fromName){
+  const p=PLACES[placeId];
+  mountScreen('detail', `
+    <div class="appbar"><button class="back" onclick="showArrival('${placeId}','${fromName}')">‹</button><h1 style="font-size:18px">초대장</h1></div>
+    <div class="detail">
+      <div class="ticket">
+        <div class="emoji">${p.emoji}</div>
+        <div class="place">${p.mins}분 ${p.name} 초대장</div>
+        <div class="quote">${p.quote}</div>
+        <hr class="dash">
+        <div class="info">초대한 사람 · <b style="color:var(--ink)">${fromName}</b><br>분위기 · ${p.vibe}<br>대화 시간 · ${p.mins}분</div>
+        <div class="timepill">⏱ ${p.mins}:00 제한</div>
+      </div>
+      <div class="bigbtns" style="margin-top:24px">
+        <button class="open" onclick="enterRoom('${placeId}','${fromName}')">수락 · 입장하기</button>
+        <button class="dodge" onclick="toast('나중에 다시 초대받을 수 있어요 🌙');go('home')">나중에</button>
+      </div>
+    </div>
+  `);
+  show('detail'); state.screen='detail';
+}
+
+/* =====================================================================
+   회피 연출
+   ===================================================================== */
+function startAvoid(placeId){
+  const p=PLACES[placeId];
+  mountScreen('avoid', `
+    <div class="dodge-scene">
+      <div class="stage">${avoidSceneSVG(p)}</div>
+      <div class="dodge-cap">${p.avoidCap}</div>
+      <div class="dodge-desc">${p.avoidDesc}</div>
+      <div class="bigbtns" style="margin-top:26px">
+        <button class="dodge" onclick="go('home')">돌아가기</button>
+      </div>
+      <div class="hint">회피하기는 '무시'가 아니에요. 캐릭터가 귀엽게 피할 뿐 🙈</div>
+    </div>
+  `);
+  show('avoid'); state.screen='avoid';
+  toast(`${p.emoji} 회피했습니다`);
+}
+function avoidSceneSVG(p){
+  return `<svg viewBox="0 0 240 200" width="240" height="200">
+    <ellipse cx="120" cy="180" rx="60" ry="8" fill="#000" opacity="0.25"/>
+    <rect x="40" y="60" width="160" height="90" rx="10" fill="#1d2350" opacity="0.6"/>
+    <text x="120" y="120" font-size="70" text-anchor="middle" style="animation:floaty 2s infinite">${p.emoji}</text>
+    <text x="180" y="80" font-size="40" text-anchor="middle">🙈</text>
+  </svg>`;
+}
+
+/* =====================================================================
+   장소 대화방 + 타이머
+   ===================================================================== */
+function enterRoom(placeId, fromName){
+  const p=PLACES[placeId];
+  state.room={ place:placeId, from:fromName||'친구', remain:p.mins*60, msgs:[], timer:null, botIdx:0 };
+  renderRoom();
+  show('room'); state.screen='room';
+  // 시작 인사
+  pushRoomSys(`${p.emoji} ${p.name}에 입장했어요. ${p.mins}분 뒤 자동으로 닫혀요.`);
+  setTimeout(()=>botSpeak(),1200);
+  startTimer();
+}
+function startTimer(){
+  const r=state.room;
+  r.timer=setInterval(()=>{
+    r.remain--;
+    const el=document.getElementById('timer');
+    if(el){ el.textContent=fmt(r.remain); el.classList.toggle('warn', r.remain<=30); }
+    if(r.remain<=0){ clearInterval(r.timer); endRoom(); }
+    // 가끔 봇이 말함
+    if(r.remain%14===0 && r.remain>4) botSpeak();
+  },1000);
+}
+function fmt(s){ const m=Math.floor(s/60), ss=s%60; return `${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`; }
+function renderRoom(){
+  const r=state.room, p=PLACES[r.place];
+  const peer=Object.values(CHATS).find(c=>c.peer.name===r.from)?.peer || FRIENDS[0];
+  mountScreen('room', `
+    <div class="place-room">
+      <div class="place-sky">${skySVG(p.sky)}</div>
+      <div class="room-top">
+        <button class="back" onclick="confirmLeave()">‹</button>
+        <div style="flex:1">
+          <div class="rt-name">${p.emoji} ${p.name}</div>
+          <div class="rt-sub">${p.vibe} · ${r.from}님과</div>
+        </div>
+        <div class="timer" id="timer">${fmt(r.remain)}</div>
+      </div>
+      <div class="room-msgs" id="roomMsgs"></div>
+      <div class="room-chars">
+        <div class="char">${charSVG(peer.color, peer.face, 64)}<span class="nm">${r.from}</span></div>
+        <div class="char">${charSVG(ME.color, ME.face, 64)}<span class="nm">나</span></div>
+      </div>
+      <div class="action-tray">
+        ${p.actions.map(a=>`<button class="act-btn" onclick="doAction('${a}')">${a}</button>`).join('')}
+      </div>
+      <div class="inputbar" style="background:rgba(0,0,0,.35)">
+        <input id="roomInput" placeholder="${p.name}에서 한마디…" onkeydown="if(event.key==='Enter')sendRoom()">
+        <button class="send" onclick="sendRoom()">➤</button>
+      </div>
+    </div>
+  `);
+  renderRoomMsgs();
+}
+function renderRoomMsgs(){
+  const box=document.getElementById('roomMsgs'); if(!box) return;
+  const r=state.room;
+  box.innerHTML=r.msgs.map(m=>{
+    if(m.type==='sys') return `<div class="sysline">${m.t}</div>`;
+    if(m.type==='action') return `<div class="sysline" style="background:rgba(255,212,126,.12);color:var(--lamp)">${m.t}</div>`;
+    return `<div class="bub ${m.s}">${m.t}</div>`;
+  }).join('');
+  box.scrollTop=box.scrollHeight;
+}
+function pushRoomSys(t){ if(!t) return; state.room.msgs.push({type:'sys',t}); renderRoomMsgs(); }
+function sendRoom(){
+  const inp=document.getElementById('roomInput'); const t=inp.value.trim(); if(!t) return;
+  state.room.msgs.push({s:'me',t}); inp.value=''; renderRoomMsgs();
+  setTimeout(botSpeak, 700+Math.random()*600);
+}
+function botSpeak(){
+  const r=state.room; if(!r||r.remain<=0) return; const p=PLACES[r.place];
+  const line=p.bot[r.botIdx % p.bot.length]; r.botIdx++;
+  r.msgs.push({s:'you',t:line}); renderRoomMsgs();
+}
+function doAction(a){
+  const r=state.room; const peer=r.from;
+  state.room.msgs.push({type:'action',t:`나의 캐릭터가 ${a.replace(/^[^ ]+ /,'')} 합니다.`});
+  renderRoomMsgs();
+}
+function confirmLeave(){
+  if(confirm('대화방을 나가면 장소가 닫혀요. 나갈까요?')){ endRoom(); }
+}
+function endRoom(){
+  const r=state.room; if(!r) return; clearInterval(r.timer);
+  const p=PLACES[r.place];
+  mountScreen('end', `
+    <div class="endscene">
+      <div style="position:absolute;inset:0;opacity:.4">${skySVG(p.sky)}</div>
+      <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center">
+        <div class="em">${p.emoji}</div>
+        <div class="etext">${p.end}</div>
+        <div class="esub">${p.endSub}</div>
+        <div class="bigbtns" style="max-width:280px">
+          <button class="open" onclick="go('home')">대화방으로 돌아가기</button>
+          <button class="dodge" onclick="go('places')">다른 장소 보기</button>
+        </div>
+      </div>
+    </div>
+  `);
+  show('end'); state.screen='end';
+}
+
+/* =====================================================================
+   화면: 장소 모아보기
+   ===================================================================== */
+function renderPlaces(){
+  const cards=Object.values(PLACES).map(p=>`
+    <div class="place-card" onclick="openPlaceSheet('${p.id}')">
+      <div class="pc-sky">${skySVG(p.sky)}</div>
+      <div class="pc-time">⏱ ${p.mins}분</div>
+      <div class="pc-info">
+        <div class="pc-name">${p.emoji} ${p.name}</div>
+        <div class="pc-vibe">${p.vibe}</div>
+      </div>
+    </div>`).join('');
+  mountScreen('places', `
+    <div class="appbar"><h1>🗺️ 장소 모아보기</h1></div>
+    <div style="padding:0 20px;font-size:12px;color:var(--ink-dim)">장소마다 분위기와 시간, 캐릭터 모션이 달라요. 코드로 비밀 아지트에 입장할 수도 있어요.</div>
+    <div class="scroll"><div class="places-grid">${cards}</div></div>
+  `);
+}
+function openPlaceSheet(id){
+  const p=PLACES[id]; state.sheetPlace=id;
+  openSheetHTML(`
+    <div style="border-radius:18px;overflow:hidden;height:120px;margin-bottom:14px;position:relative">
+      ${skySVG(p.sky)}
+      <div style="position:absolute;left:14px;bottom:10px;font-family:'Jua';font-size:22px">${p.emoji} ${p.name}</div>
+    </div>
+    <div class="s-vibe">${p.quote} · ${p.vibe}</div>
+    <p style="font-size:13px;color:var(--ink-dim);line-height:1.6;margin:0 0 4px">${p.desc}</p>
+    <div class="s-sec"><h4>⏱ 대화 시간</h4><span class="tag">${p.mins}분 제한 · 시간이 끝나면 자동으로 닫혀요</span></div>
+    <div class="s-sec"><h4># 주제</h4><div class="tagrow">${p.topics.map(t=>`<span class="tag">${t}</span>`).join('')}</div></div>
+    <div class="s-sec"><h4>🎭 캐릭터 행동</h4><div class="tagrow">${p.actions.map(a=>`<span class="tag">${a}</span>`).join('')}</div></div>
+    <div class="s-sec"><h4>📨 초대 연출 / 🙈 회피 연출</h4>
+      <span class="tag">초대 · ${p.invite}</span> <span class="tag">회피 · ${p.avoidCap}</span></div>
+    <div class="s-sec"><h4>🔑 비밀 아지트 코드</h4>
+      <div class="codebox"><input value="${p.code}" readonly onclick="this.select()"></div>
+      <div class="hint">셋로그처럼 코드를 가진 사람만 입장할 수 있어요</div>
+    </div>
+    <button class="bigcta" onclick="closeSheet();enterRoom('${id}','달걀')">${p.emoji} ${p.name} 바로 입장</button>
+    <button class="bigcta" style="background:rgba(255,255,255,.1);color:var(--ink);box-shadow:none;margin-top:10px" onclick="closeSheet();inviteFromPlace('${id}')">친구 초대장 보내기</button>
+  `);
+}
+function inviteFromPlace(id){
+  // 첫 친구 채팅 열고 초대 보냄
+  state.chat='dalgyal'; openChat('dalgyal'); setTimeout(()=>sendInvite(id),300);
+}
+
+/* =====================================================================
+   초대 코드 입장
+   ===================================================================== */
+function openCodeSheet(){
+  openSheetHTML(`
+    <h2>🔑 초대 코드 입장</h2>
+    <div class="s-vibe">코드를 가진 사람만 들어올 수 있는 비밀 아지트</div>
+    <div class="codebox"><input id="codeInput" placeholder="ROOM-YACHA-001" oninput="this.value=this.value.toUpperCase()"></div>
+    <div class="s-sec"><h4>예시 코드</h4><div class="tagrow">
+      ${Object.values(PLACES).map(p=>`<span class="tag" style="cursor:pointer" onclick="document.getElementById('codeInput').value='${p.code}'">${p.code}</span>`).join('')}
+    </div></div>
+    <button class="bigcta" onclick="tryCode()">입장하기</button>
+  `);
+}
+function tryCode(){
+  const v=(document.getElementById('codeInput').value||'').trim().toUpperCase();
+  const p=Object.values(PLACES).find(x=>x.code===v);
+  if(p){ closeSheet(); toast(`${p.emoji} ${p.name} 아지트 입장!`); enterRoom(p.id,'아지트 멤버'); }
+  else toast('코드를 찾을 수 없어요 🙈 예시 코드를 눌러보세요');
+}
+
+/* =====================================================================
+   화면: 캐릭터 아바타
+   ===================================================================== */
+const AV_COLORS=['#ff9a52','#7c6bd6','#ffd47e','#5b4a9e','#7ee0a8','#ff6b6b','#5aa9ff','#f48fb1'];
+const AV_FACES=['😎','🙂','😊','🥺','😴','🤓','😆'];
+function renderAvatar(){
+  mountScreen('avatar', `
+    <div class="appbar"><h1>🧑‍🎤 내 캐릭터</h1></div>
+    <div class="scroll"><div class="avatar-screen">
+      <div class="av-stage"><div class="ring" id="avStage">${charSVG(ME.color, ME.face, 150)}</div></div>
+      <div class="av-name">${ME.name}</div>
+      <div class="av-status">🌙 옥상에서 별 보는 중</div>
+
+      <div class="cz-sec"><h4>캐릭터 컬러</h4>
+        <div class="swatches">${AV_COLORS.map(c=>`<div class="sw ${c===ME.color?'on':''}" style="background:${c}" onclick="setColor('${c}')"></div>`).join('')}</div>
+      </div>
+      <div class="cz-sec"><h4>표정</h4>
+        <div class="face-opts">${AV_FACES.map(f=>`<div class="fo ${f===ME.face?'on':''}" onclick="setFace('${f}')">${f}</div>`).join('')}</div>
+      </div>
+      <div class="cz-sec"><h4>장소별 행동 미리보기</h4>
+        <div class="tagrow">
+          ${Object.values(PLACES).map(p=>`<span class="tag">${p.emoji} ${p.actions[0].replace(/^[^ ]+ /,'')}</span>`).join('')}
+        </div>
+      </div>
+      <div class="hint" style="padding:14px">프로필 대신 캐릭터가 장소마다 다르게 움직여요</div>
+    </div></div>
+  `);
+}
+function setColor(c){ ME.color=c; renderAvatar(); }
+function setFace(f){ ME.face=f; renderAvatar(); }
+
+/* =====================================================================
+   화면: 프로필 / 나
+   ===================================================================== */
+function renderProfile(){
+  mountScreen('profile', `
+    <div class="appbar"><h1>🌙 나</h1></div>
+    <div class="scroll" style="padding-bottom:90px">
+      <div style="display:flex;flex-direction:column;align-items:center;padding:20px">
+        <div class="ring" style="width:130px;height:130px;border-radius:50%;background:radial-gradient(circle at 50% 30%,rgba(124,107,214,.4),transparent 60%);display:grid;place-items:center">${charSVG(ME.color, ME.face, 110)}</div>
+        <div class="av-name">${ME.name}</div>
+        <div class="av-status">"야, 잠깐 옥상으로 올라올래?"</div>
+      </div>
+      <div class="section-title">내 정보</div>
+      ${[['🧑‍🎤 캐릭터 꾸미기','avatar'],['🗺️ 장소 모아보기','places'],['🔑 초대 코드로 입장','code'],['👥 친구 관리','friends'],['🔔 알림 설정','noti'],['🎨 테마 (밤 분위기)','theme'],['ℹ️ 진실의 옥상 소개','about']].map(([t,k])=>`
+        <div class="crow" onclick="profileTap('${k}')"><div class="avatar" style="background:rgba(255,255,255,.06);font-size:20px">${t.split(' ')[0]}</div>
+        <div class="meta"><div class="name">${t.replace(/^[^ ]+ /,'')}</div></div><span style="color:var(--ink-faint)">›</span></div>`).join('')}
+      <div class="hint" style="padding:20px">진실의 옥상 · Truth Rooftop<br>친구들과 특별한 장소에서 만나는 감성 장소형 메신저 🌙🏪✨</div>
+    </div>
+  `);
+}
+function profileTap(k){
+  if(k==='avatar') go('avatar');
+  else if(k==='places') go('places');
+  else if(k==='code') openCodeSheet();
+  else if(k==='about') openSheetHTML(`<h2>🌙 진실의 옥상</h2><div class="s-vibe">"야, 잠깐 옥상으로 올라올래?"</div>
+    <p style="font-size:13px;color:var(--ink-dim);line-height:1.7">단순한 메신저가 아니에요. 친구들과 대화하다가 특정 <b>장소</b>로 초대해, 그곳만의 분위기에서 대화를 나누는 <b>장소 기반 메신저</b>예요.</p>
+    <p style="font-size:13px;color:var(--ink-dim);line-height:1.7">싸움·저격·왕따를 위한 앱이 아니라, 친구끼리 장난스럽게 특별한 장소에서 대화하는 경험이 핵심이에요.</p>
+    <div class="s-sec"><h4>참고 키워드</h4><div class="tagrow">${['진실의 옥상','야차(YACHA)','셋로그','감성 메신저','종이비행기','방과후','도시 야경','비밀 아지트'].map(t=>`<span class="tag">${t}</span>`).join('')}</div></div>`);
+  else toast('데모에서는 생략된 메뉴예요 🌙');
+}
+
+/* =====================================================================
+   바텀시트 유틸
+   ===================================================================== */
+function openSheetHTML(html){
+  const mask=document.getElementById('sheetMask');
+  mask.innerHTML=`<div class="sheet" onclick="event.stopPropagation()"><div class="grip"></div>${html}</div>`;
+  mask.classList.add('open');
+}
+function closeSheet(e){
+  if(e && e.target!==document.getElementById('sheetMask')) return;
+  document.getElementById('sheetMask').classList.remove('open');
+}
+
+/* =====================================================================
+   초기화
+   ===================================================================== */
+function initStars(){
+  const c=document.getElementById('bgStars'); let h='';
+  for(let i=0;i<70;i++){ h+=`<i style="left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*4}s"></i>`; }
+  c.innerHTML=h;
+}
+function tickClock(){
+  const d=new Date();
+  document.getElementById('clock').textContent=`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+initStars(); tickClock(); setInterval(tickClock,30000);
+renderHome(); show('home');
+</script>
+</body>
+</html>
